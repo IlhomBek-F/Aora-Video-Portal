@@ -5,8 +5,8 @@ import { Text, View } from "react-native"
 const RootLayout = () => {
     return (
         <View className="justify-center items-center flex-1">
-          <Text className="text-black font-pblack">Hello world</Text>
-          <Link href={'/profile'} style={{color: 'blue'}}>Profile</Link>
+          <Text className="text-black font-pblack">Auro</Text>
+          <Link href={'/home'} style={{color: 'blue'}}>Home</Link>
         </View>
     )
 }
