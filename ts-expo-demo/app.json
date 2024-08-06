@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "native-app",
-    "slug": "native-app",
+    "name": "ts-expo-demo",
+    "slug": "ts-expo-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,8 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "package": "com.jsm.aora"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -32,9 +31,6 @@
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    "jsEngine": "hermes",
-    "sdkVersion": "51.0.0"
-  },
-  "name": "native-app"
+    }
+  }
 }

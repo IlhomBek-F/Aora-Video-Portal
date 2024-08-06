@@ -5,6 +5,7 @@ import { account } from "@/lib/appwrite";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { View , Text, SafeAreaView, ScrollView, Image} from "react-native";
+import { OAuthProvider } from "react-native-appwrite";
 
 function SignIn() {
     const [form, setForm] = useState({
@@ -15,6 +16,7 @@ function SignIn() {
     const [submiting, setSubmiting] = useState(false)
 
     const handleSubmit = () => {
+      console.log(form)
     }
 
     return (

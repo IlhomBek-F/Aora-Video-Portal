@@ -1,11 +1,10 @@
 import Button from "@/components/Button";
 import FormField from "@/components/FormField";
 import { images } from "@/constants";
-import { account } from "@/lib/appwrite";
-import { Link } from "expo-router";
+import { signUp } from "@/lib/appwrite";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import { SafeAreaView, ScrollView, Text, View, Image } from "react-native";
-import { ID } from "react-native-appwrite";
+import { SafeAreaView, ScrollView, Text, View, Image , Alert} from "react-native";
 
 function SignUp() {
   const [form, setForm] = useState({
@@ -14,10 +13,24 @@ function SignUp() {
     password: ''
   });
 
-  const handleSignUp = () => {
-     account.create(ID.unique(), form.email, form.password, form.name)
-     .then((data) => console.log(data))
-     .catch(console.log)
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSignUp = async () => {
+    if(!form.email || !form.name || !form.password) {
+       Alert.alert('Error', 'Please fill in all the fielsd')
+    }
+
+    setSubmitting(true);
+
+    try {
+      const result = await signUp(form);
+
+      router.replace('/home')
+    } catch (error: any) {
+      Alert.alert('Error', error.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
     return (
@@ -48,6 +61,7 @@ function SignUp() {
                              handleChange={(password) => setForm({...form, password})}
                              />
                     <Button title="Sign Up"
+                            loading={submitting}
                             handlePress={handleSignUp}
                             containerStyle="mt-7"
                     />

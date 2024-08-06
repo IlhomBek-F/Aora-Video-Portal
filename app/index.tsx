@@ -5,6 +5,7 @@ import React from "react"
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native"
 
 const RootLayout = () => {
+  console.log('as')
     return (
       <SafeAreaView className="bg-primary">
           <ScrollView contentContainerStyle={{height: '100%'}}>
