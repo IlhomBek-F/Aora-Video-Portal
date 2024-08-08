@@ -1,6 +1,6 @@
-import { Account, Avatars, Client, Databases, ID } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, Models, Query } from 'react-native-appwrite';
 
-export const appwriteConfig = {
+const { endpoint, platform, project, databaseId, userCollectionId, videoCollection, storageId } = {
     endpoint: 'https://cloud.appwrite.io/v1',
     platform: 'com.jsm.aora',
     project: '66b1ba59003205ab3377',
@@ -14,9 +14,9 @@ export const appwriteConfig = {
 const client = new Client();
 
 client
-    .setEndpoint(appwriteConfig.endpoint) // Your Appwrite Endpoint
-    .setProject(appwriteConfig.project) // Your project ID
-    .setPlatform(appwriteConfig.platform) // Your application ID or bundle ID.;
+    .setEndpoint(endpoint) // Your Appwrite Endpoint
+    .setProject(project) // Your project ID
+    .setPlatform(platform) // Your application ID or bundle ID.;
 
 const account = new Account(client);
 const avatars = new Avatars(client);
@@ -33,7 +33,7 @@ export const signUp = async ({ name, email, password }: { name: string, email: s
 
         await signIn({ email, password });
 
-        const newUser = database.createDocument(appwriteConfig.databaseId, appwriteConfig.userCollectionId, ID.unique(), {
+        const newUser = database.createDocument(databaseId, userCollectionId, ID.unique(), {
             accountId: newAccount.$id,
             email,
             username: name,
@@ -48,11 +48,53 @@ export const signUp = async ({ name, email, password }: { name: string, email: s
 
 export const signIn = async ({ email, password }: { email: string, password: string }) => {
     try {
+        // await account.deleteSessions();
         const session = await account.createEmailPasswordSession(email, password);
-
         return session;
-    } catch (error) {
-        throw new Error();
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}
 
+export const getCurrentUser = async () => {
+    try {
+        const user = await account.get();
+
+        if (!user) throw Error;
+
+        const currentUser: any = await database.listDocuments(databaseId, userCollectionId, [Query.equal('accountId', user.$id)]);
+
+        if (!currentUser) throw Error;
+
+        return currentUser[0]
+    } catch (error: any) {
+        throw Error(error.message)
+    }
+}
+
+export const getAllPosts = async () => {
+    try {
+        const posts = await database.listDocuments(databaseId, videoCollection);
+
+        return posts.documents
+    } catch (error: any) {
+        throw new Error(error.message)
+    }
+}
+
+export const getLatestPosts = async () => {
+    try {
+        const posts = await database.listDocuments(databaseId, videoCollection, [Query.orderDesc('$createdAt'), Query.limit(7)]);
+        return posts
+    } catch (error: any) {
+        throw new Error(error.message)
+    }
+}
+
+export const logOut = async (sessionId: string) => {
+    try {
+        await account.deleteSession(sessionId)
+    } catch (error: any) {
+        throw new Error(error.message)
     }
 }

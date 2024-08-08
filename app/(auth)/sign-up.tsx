@@ -2,11 +2,13 @@ import Button from "@/components/Button";
 import FormField from "@/components/FormField";
 import { images } from "@/constants";
 import { signUp } from "@/lib/appwrite";
+import { useUser } from "@/lib/context/userContext";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView, ScrollView, Text, View, Image , Alert} from "react-native";
 
 function SignUp() {
+  const {user, setUser} = useUser();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -17,15 +19,17 @@ function SignUp() {
 
   const handleSignUp = async () => {
     if(!form.email || !form.name || !form.password) {
-       Alert.alert('Error', 'Please fill in all the fielsd')
+       Alert.alert('Error', 'Please fill in all the fields');
+       return;
     }
 
     setSubmitting(true);
 
     try {
       const result = await signUp(form);
+      setUser({...user, currentUser: result});
 
-      router.replace('/home')
+      router.replace('/home');
     } catch (error: any) {
       Alert.alert('Error', error.message)
     } finally {

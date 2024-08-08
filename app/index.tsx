@@ -1,12 +1,19 @@
 import Button from "@/components/Button"
 import { images } from "@/constants"
-import { router} from "expo-router"
+import { useUser } from "@/lib/context/userContext"
+import { Redirect, router} from "expo-router"
 import React from "react"
 import { Image, SafeAreaView, ScrollView, Text, View } from "react-native"
 
 const RootLayout = () => {
-  console.log('as')
-    return (
+  const {user} = useUser();
+  const {isLoading, isLoggedIn} = user;
+
+  if(!isLoading && isLoggedIn) {
+    return <Redirect href='/home' />
+  };
+
+  return (
       <SafeAreaView className="bg-primary">
           <ScrollView contentContainerStyle={{height: '100%'}}>
               <View className="w-full min-h-[85vh] px-4 justify-center items-center">

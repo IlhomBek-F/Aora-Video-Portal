@@ -1,13 +1,15 @@
 import Button from "@/components/Button";
 import FormField from "@/components/FormField";
 import { images } from "@/constants";
-import { account } from "@/lib/appwrite";
-import { Link } from "expo-router";
+import { getCurrentUser, signIn } from "@/lib/appwrite";
+import { useUser } from "@/lib/context/userContext";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import { View , Text, SafeAreaView, ScrollView, Image} from "react-native";
-import { OAuthProvider } from "react-native-appwrite";
+import { View , Text, SafeAreaView, ScrollView, Image, Alert} from "react-native";
 
 function SignIn() {
+  const {user, setUser} = useUser() as any;
+
     const [form, setForm] = useState({
         email: '',
         password: ''
@@ -15,8 +17,24 @@ function SignIn() {
 
     const [submiting, setSubmiting] = useState(false)
 
-    const handleSubmit = () => {
-      console.log(form)
+    const handleSubmit = async () => {
+      if(!form.email || !form.password) {
+        Alert.alert('Error', 'Please enter your email and password');
+        return;
+      }
+      
+      setSubmiting(true);
+
+      try {
+         await signIn(form);
+         const currentUser = await getCurrentUser();
+         setUser({isLoggedIn: true, currentUser, loading: false});
+
+         Alert.alert('Success', 'User signed in successfully')
+         router.replace('/home');
+      } catch (error: any) {
+        Alert.alert('Error', error.message)
+      }
     }
 
     return (
