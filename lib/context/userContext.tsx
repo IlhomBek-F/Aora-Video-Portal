@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "../appwrite";
+import { router } from "expo-router";
 
 const userContext = createContext({});
 
@@ -15,8 +16,11 @@ function UserProvider({children}: {children: ReactNode}) {
          getCurrentUser()
          .then((res) => {
             setUser({isLoggedIn: true, currentUser: res, loading: false})
-         }).catch(() => {
-            setUser({isLoggedIn: false, currentUser: {}, loading: false})
+         }).catch((error) => {
+             setUser({isLoggedIn: false, currentUser: {}, loading: false})
+            if(error.code === 401) {
+                router.push('/sign-in')
+            }
          });
 
     }, []);

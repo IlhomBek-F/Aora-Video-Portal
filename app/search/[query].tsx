@@ -26,8 +26,7 @@ function Search() {
             <View className="my-6 px-4 space-y-6">
                 <Text className="font-pmedium text-sm text-gray-100">Search results</Text>
                 <Text className="text-2xl font-semibold text-white">{query}</Text>
-
-                <View className="mt-6 mb-8">
+                <View>
                 <SearchInput initialValue={query}/>
                 </View>
             </View>

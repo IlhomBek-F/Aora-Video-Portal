@@ -42,7 +42,7 @@ export const signUp = async ({ name, email, password }: { name: string, email: s
 
         return newUser
     } catch (error: any) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -52,23 +52,22 @@ export const signIn = async ({ email, password }: { email: string, password: str
         const session = await account.createEmailPasswordSession(email, password);
         return session;
     } catch (error: any) {
-        throw new Error(error.message);
+        throw error
     }
 }
 
 export const getCurrentUser = async () => {
     try {
         const user = await account.get();
-
         if (!user) throw Error;
 
         const currentUser: any = await database.listDocuments(databaseId, userCollectionId, [Query.equal('accountId', user.$id)]);
 
         if (!currentUser) throw Error;
 
-        return currentUser[0]
+        return currentUser.documents[0]
     } catch (error: any) {
-        throw Error(error.message)
+        throw error
     }
 }
 
@@ -78,7 +77,7 @@ export const getAllPosts = async () => {
 
         return posts.documents
     } catch (error: any) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -87,7 +86,7 @@ export const getLatestPosts = async () => {
         const posts = await database.listDocuments(databaseId, videoCollection, [Query.orderDesc('$createdAt'), Query.limit(7)]);
         return posts.documents
     } catch (error: any) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
@@ -97,14 +96,25 @@ export const searchPost = async (query: string) => {
 
         return posts.documents;
     } catch (error: any) {
-        throw new Error(error.message)
+        throw error
     }
 }
 
-export const logOut = async (sessionId: string) => {
+export const getPostsByUserId = async (userId: string) => {
     try {
-        await account.deleteSession(sessionId)
+        const userPosts = await database.listDocuments(databaseId, videoCollection, [Query.equal('users', userId)]);
+        return userPosts.documents
     } catch (error: any) {
-        throw new Error(error.message)
+        throw error
+    }
+};
+
+export const logOut = async () => {
+    try {
+        const session = await account.deleteSession('current');
+
+        return session;
+    } catch (error: any) {
+        throw error
     }
 }

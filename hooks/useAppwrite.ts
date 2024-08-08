@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
@@ -12,6 +13,12 @@ function useAppwrite(fn) {
             const resp = await fn();
             setData({ data: resp, loading: false })
         } catch (error: any) {
+
+            if (error.code === 401) {
+                router.replace('/sign-in');
+                return;
+            }
+
             Alert.alert('Error', error.message)
         }
     }

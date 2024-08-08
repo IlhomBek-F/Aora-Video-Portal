@@ -7,9 +7,11 @@ import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import VideoCard from "@/components/VideoCard";
 import EmptyState from "@/components/EmptyState";
 import useAppwrite from "@/hooks/useAppwrite";
+import { useUser } from "@/lib/context/userContext";
 
 function Home() {
-    const [refreshing, setRefresh] = useState(false)
+    const [refreshing, setRefresh] = useState(false);
+    const {user: {currentUser}} = useUser();
     const {data: posts, loading: loadingPosts, refetch: refetchPosts} = useAppwrite(getAllPosts);
     const {data: latestPosts, loading: loadingLatestPosts, refetch: refetchLatestPosts} = useAppwrite(getLatestPosts);
      
@@ -35,7 +37,7 @@ function Home() {
                 <View className="flex-row justify-between items-start mb-6">
                     <View>
                         <Text className="font-pmedium text-sm text-gray-100">Welcome Back</Text>
-                        <Text className="text-2xl font-semibold text-white">Jame</Text>
+                        <Text className="text-2xl font-semibold text-white">{currentUser.username}</Text>
                     </View>
                     <View className="mt-1.5">
                         <Image source={images.logoSmall} className="w-9 h-10" resizeMode="contain"/>
