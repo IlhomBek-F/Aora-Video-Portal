@@ -1,14 +1,42 @@
+import EmptyState from "@/components/EmptyState";
+import SearchInput from "@/components/SearchInput";
+import VideoCard from "@/components/VideoCard";
+import useAppwrite from "@/hooks/useAppwrite";
+import { searchPost } from "@/lib/appwrite";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { View , Text} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View , Text, SafeAreaView, FlatList} from "react-native";
 
 function Search() {
-    const params = useLocalSearchParams();
+    const {query} = useLocalSearchParams();
+    const {data, refetch} = useAppwrite(() => searchPost(query as string));
+    const [refreshing, setRefresh] = useState(false);
+
+    useEffect(() => {
+         refetch().finally(() => setRefresh(false));
+    }, [query, refreshing]);
 
     return (
-        <View>
-            <Text>Search</Text>
-        </View>
+        <SafeAreaView className="bg-primary text-white h-full">
+         <FlatList data={data} 
+         key={1}
+         keyExtractor={(item: any) => item?.$id}
+         renderItem={({item}) => <VideoCard item={item} key={item.$id}/>}
+         ListHeaderComponent={() => (
+            <View className="my-6 px-4 space-y-6">
+                <Text className="font-pmedium text-sm text-gray-100">Search results</Text>
+                <Text className="text-2xl font-semibold text-white">{query}</Text>
+
+                <View className="mt-6 mb-8">
+                <SearchInput initialValue={query}/>
+                </View>
+            </View>
+         )}
+         ListEmptyComponent={<EmptyState title='No videos found' subtitle='No videos found for this search query'/>}
+         refreshing={refreshing}
+         onRefresh={() => setRefresh(true)}
+         />
+      </SafeAreaView>
     )
 }
 

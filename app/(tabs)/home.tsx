@@ -12,7 +12,6 @@ function Home() {
     const [refreshing, setRefresh] = useState(false)
     const {data: posts, loading: loadingPosts, refetch: refetchPosts} = useAppwrite(getAllPosts);
     const {data: latestPosts, loading: loadingLatestPosts, refetch: refetchLatestPosts} = useAppwrite(getLatestPosts);
-
      
     const onRefresh = async () => {
         setRefresh(() => true);
@@ -24,12 +23,12 @@ function Home() {
     const onChange = (text: string) => {
 
     }
-
+    
     return (
       <SafeAreaView className="bg-primary text-white h-full">
          <FlatList data={posts} 
          key={1}
-         keyExtractor={(item: any) => item?.id}
+         keyExtractor={(item: any) => item?.$id}
          renderItem={({item}) => <VideoCard item={item} key={item.$id}/>}
          ListHeaderComponent={() => (
             <View className="my-6 px-4 space-y-6">

@@ -9,7 +9,7 @@ function useAppwrite(fn) {
         setData({ ...data, loading: true });
 
         try {
-            const resp = await fn() as any;
+            const resp = await fn();
             setData({ data: resp, loading: false })
         } catch (error: any) {
             Alert.alert('Error', error.message)

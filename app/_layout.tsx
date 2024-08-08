@@ -4,7 +4,6 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
 import { UserProvider } from '@/lib/context/userContext';
 
@@ -12,7 +11,6 @@ import { UserProvider } from '@/lib/context/userContext';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
 
   const [fontsLoaded, error] = useFonts({
      "Poppins-Black": require('../assets/fonts/Poppins-Black.ttf'),
@@ -43,6 +41,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
       </Stack>
     </UserProvider>
   );
