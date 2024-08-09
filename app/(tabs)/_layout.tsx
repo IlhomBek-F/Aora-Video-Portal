@@ -27,8 +27,8 @@ function TabsLayout() {
             <Tabs.Screen name="home" options={{title: 'Home', headerShown: false, tabBarIcon: ({color, focused}) => {
                 return <TabIcon color={color} icon={icons.home} focused={focused} name="Home" />
             }}}></Tabs.Screen>
-            <Tabs.Screen name="bookMark" options={{title: 'BookMark', headerShown: false, tabBarIcon: ({color, focused}) => {
-                return <TabIcon name="Book Mark" icon={icons.bookmark} focused={focused} color={color} />
+            <Tabs.Screen name="saved" options={{title: 'Saved', headerShown: false, tabBarIcon: ({color, focused}) => {
+                return <TabIcon name="Saved" icon={icons.bookmark} focused={focused} color={color} />
             }}}></Tabs.Screen>
             <Tabs.Screen name="create" options={{title: 'Create', headerShown: false, tabBarIcon: ({color, focused}) => {
                 return <TabIcon color={color} icon={icons.plus} focused={focused} name="Create" />

@@ -3,7 +3,7 @@ import { Text, SafeAreaView, FlatList, View, Image, RefreshControl, Alert} from 
 import { images } from "@/constants";
 import SearchInput from "@/components/SearchInput";
 import Trending from "@/components/Trending";
-import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
+import { deletePost, getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import VideoCard from "@/components/VideoCard";
 import EmptyState from "@/components/EmptyState";
 import useAppwrite from "@/hooks/useAppwrite";
@@ -14,7 +14,8 @@ function Home() {
     const {user: {currentUser}} = useUser();
     const {data: posts, loading: loadingPosts, refetch: refetchPosts} = useAppwrite(getAllPosts);
     const {data: latestPosts, loading: loadingLatestPosts, refetch: refetchLatestPosts} = useAppwrite(getLatestPosts);
-     
+    const [dataPosts, setPosts] = useState(posts);
+
     const onRefresh = async () => {
         setRefresh(() => true);
         await refetchLatestPosts();
@@ -22,16 +23,31 @@ function Home() {
         setRefresh(false)
     }
 
+    useEffect(() => {
+        setPosts(posts);
+    }, [posts.length])
+
     const onChange = (text: string) => {
 
     }
-    
+
+    const handleDeletePost = (item: any) => {
+        const videoId = item.video.match(/\/files\/([^/]+)\/view/)[1];
+        const thumbnailId = item.thumbnail.match(/\/files\/([^/]+)\/preview/)[1];
+        deletePost(item.$id, videoId, thumbnailId)
+        .then(() => {
+           const filtered = dataPosts.filter((it) => it.$id !== item.$id);
+           setPosts(filtered);
+          Alert.alert('Success', 'Video deleted successfully')
+        })
+    }
+
     return (
       <SafeAreaView className="bg-primary text-white h-full">
-         <FlatList data={posts} 
+         <FlatList data={dataPosts} 
          key={1}
          keyExtractor={(item: any) => item?.$id}
-         renderItem={({item}) => <VideoCard item={item} key={item.$id}/>}
+         renderItem={({item}) => <VideoCard item={item} key={item.$id} handleDeletePost={() => handleDeletePost(item)}/>}
          ListHeaderComponent={() => (
             <View className="my-6 px-4 space-y-6">
                 <View className="flex-row justify-between items-start mb-6">
@@ -53,7 +69,7 @@ function Home() {
             </View>
          )}
          ListEmptyComponent={<EmptyState />}
-         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor='white' title='uploading' />}
         />
       </SafeAreaView>
     )

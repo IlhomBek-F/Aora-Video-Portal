@@ -3,7 +3,7 @@ import { router, usePathname } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Image, TextInput, TouchableOpacity, View } from "react-native";
 
-function SearchInput({initialValue}) {
+function SearchInput({initialValue, placeholder = 'Search for a video topic'}) {
    const pathName = usePathname();
 
    const [query, setQuery] = useState(initialValue ?? '');
@@ -13,7 +13,7 @@ function SearchInput({initialValue}) {
         space-x-4 
         ">
             <TextInput className="text-base mt-0.5 text-white flex-1 font-pregular" 
-            placeholder="Search for a video topic"
+            placeholder={placeholder}
             placeholderTextColor='#CDCDE0'
             value={query}
             onChangeText={(e) => setQuery(e)}

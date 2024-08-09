@@ -1,12 +1,13 @@
 import { Account, Avatars, Client, Databases, ID, ImageGravity, Models, Query, Storage, UploadProgress } from 'react-native-appwrite';
 
-const { endpoint, platform, project, databaseId, userCollectionId, videoCollection, storageId } = {
+const { endpoint, platform, project, databaseId, userCollectionId, videoCollection, storageId, likedVideoCollection } = {
     endpoint: 'https://cloud.appwrite.io/v1',
     platform: 'com.jsm.aora',
     project: '66b1ba59003205ab3377',
     databaseId: '66b1c3d70011c0a61e4a',
     userCollectionId: '66b1c3f800266cbcb37d',
     videoCollection: '66b1c410003888554f7c',
+    likedVideoCollection: '66b5fcc20001043be8f0',
     storageId: '66b1c5780033e02fea03'
 }
 
@@ -160,6 +161,33 @@ export const getPostsByUserId = async (userId: string) => {
         throw error
     }
 };
+
+export const addToFavorite = async (userId: string, videoId: string) => {
+    try {
+        const liked = await database.createDocument(databaseId, likedVideoCollection, ID.unique(), {
+            userId,
+            videoId
+        });
+
+        return liked;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deletePost = async (documentId: string, videoId: string, thumbnailId: string) => {
+    try {
+        const deleted = await Promise.all([
+            database.deleteDocument(databaseId, videoCollection, documentId),
+            storage.deleteFile(storageId, videoId),
+            storage.deleteFile(storageId, thumbnailId)
+        ])
+
+        return deleted;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const logOut = async () => {
     try {
