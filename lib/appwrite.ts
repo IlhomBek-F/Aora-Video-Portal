@@ -1,4 +1,4 @@
-import { Account, Avatars, Client, Databases, ID, Models, Query } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, ImageGravity, Models, Query, Storage, UploadProgress } from 'react-native-appwrite';
 
 const { endpoint, platform, project, databaseId, userCollectionId, videoCollection, storageId } = {
     endpoint: 'https://cloud.appwrite.io/v1',
@@ -21,6 +21,7 @@ client
 const account = new Account(client);
 const avatars = new Avatars(client);
 const database = new Databases(client);
+const storage = new Storage(client);
 
 
 export const signUp = async ({ name, email, password }: { name: string, email: string, password: string }) => {
@@ -34,7 +35,7 @@ export const signUp = async ({ name, email, password }: { name: string, email: s
         await signIn({ email, password });
 
         const newUser = database.createDocument(databaseId, userCollectionId, ID.unique(), {
-            accountId: newAccount.$id,
+            accountId: newAccount?.$id,
             email,
             username: name,
             avatar: avatarUrl
@@ -61,7 +62,7 @@ export const getCurrentUser = async () => {
         const user = await account.get();
         if (!user) throw Error;
 
-        const currentUser: any = await database.listDocuments(databaseId, userCollectionId, [Query.equal('accountId', user.$id)]);
+        const currentUser: any = await database.listDocuments(databaseId, userCollectionId, [Query.equal('accountId', user?.$id)]);
 
         if (!currentUser) throw Error;
 
@@ -71,9 +72,60 @@ export const getCurrentUser = async () => {
     }
 }
 
+export const createPost = async (form) => {
+    try {
+        const [thumbnailUlr, videoUrl] = await Promise.all([
+            uploadFile(form.thumbnail, 'image', form.title),
+            uploadFile(form.video, 'video', form.title)
+        ]);
+
+        const newPost = await database.createDocument(databaseId, videoCollection, ID.unique(), {
+            title: form.title,
+            thumbnail: thumbnailUlr,
+            video: videoUrl,
+            prompt: form.prompt,
+            users: form.userId
+        })
+
+        return newPost;
+    } catch (error) {
+        throw error
+    }
+}
+
+export const uploadFile = async (file, type, name) => {
+    if (!file) return;
+
+    const { mimytype, ...rest } = file;
+    const asset = { name, type: rest.mimeType, size: rest.fileSize, uri: rest.uri };
+
+    try {
+        const uploadedFile = await storage.createFile(storageId, ID.unique(), asset, [], (progress: UploadProgress) => console.log(progress.progress));
+
+        const fileUrl = await getFilePreview(uploadedFile?.$id, type);
+
+        return fileUrl
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getFilePreview = async (fieldId, type) => {
+    let fileUrl;
+
+    try {
+        fileUrl = type === 'video' ? storage.getFileView(storageId, fieldId) : storage.getFilePreview(storageId, fieldId,
+            2000, 2000, ImageGravity.Top, 100);
+
+        return fileUrl
+    } catch (error) {
+        throw error
+    }
+}
+
 export const getAllPosts = async () => {
     try {
-        const posts = await database.listDocuments(databaseId, videoCollection);
+        const posts = await database.listDocuments(databaseId, videoCollection, [Query.orderDesc('$createdAt')]);
 
         return posts.documents
     } catch (error: any) {

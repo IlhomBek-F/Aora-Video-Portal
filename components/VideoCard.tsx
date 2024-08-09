@@ -6,7 +6,7 @@ import { View , Text, Image, TouchableOpacity} from "react-native";
 
 function VideoCard({item}: any) {
     const {title, thumbnail, video, users} = item;
-    const {username, avatar} = users
+    const user = users
     
     const [play, setPlay] = useState(false);
 
@@ -15,12 +15,12 @@ function VideoCard({item}: any) {
          <View className="flex-row gap-3 items-start">
             <View className="justify-center items-center flex-row flex-1">
                 <View className="w-[46px] h-[46px] rounded-md border border-secondary justify-center items-center p-0.5">
-                    <Image source={{uri: avatar}} className="w-full h-full rounded-lg" resizeMode="cover"/>
+                    <Image source={{uri: user?.avatar}} className="w-full h-full rounded-lg" resizeMode="cover"/>
                 </View>
 
                 <View className="justify-center flex-1 ml-3 gap-y-1">
                      <Text className="text-white font-psemibold text-sm" numberOfLines={1}>{title}</Text>
-                     <Text className="text-xs text-gray-100 font-pregular">{username}</Text>
+                     <Text className="text-xs text-gray-100 font-pregular">{user?.username ?? ''}</Text>
                 </View>
             </View>
 
