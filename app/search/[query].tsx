@@ -9,8 +9,8 @@ import { View , Text, SafeAreaView, FlatList} from "react-native";
 
 function Search() {
     const {query} = useLocalSearchParams();
-    const {data, refetch} = useAppwrite(() => searchPost(query as string));
     const [refreshing, setRefresh] = useState(false);
+    const {data, refetch} = useAppwrite(() => searchPost(query as string));
 
     useEffect(() => {
          refetch().finally(() => setRefresh(false));

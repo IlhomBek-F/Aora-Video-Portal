@@ -9,16 +9,17 @@ import { router } from "expo-router";
 import { createPost } from "@/lib/appwrite";
 import { useUser } from "@/lib/context/userContext";
 
-function Create() {
-    const [uploading, setUploading] = useState(false);
-    const {user: currentUser} = useUser();
+const intitialForm = {
+    title: '',
+    video: null,
+    thumbnail: null,
+    prompt: ''
+}
 
-    const [form, setForm] = useState({
-        title: '',
-        video: null,
-        thumbnail: null,
-        prompt: ''
-    });
+function Create() {
+    const {user: currentUser} = useUser();
+    const [form, setForm] = useState(intitialForm);
+    const [uploading, setUploading] = useState(false);
 
     const openPicker = async (type: string) => {
          const result = await ImagePicker.launchImageLibraryAsync({
@@ -29,17 +30,9 @@ function Create() {
         });
 
          if(!result.canceled) {
-
-            if(type === 'image') {
-                setForm({...form, thumbnail: result.assets[0]})
-             }
-
-            if(type === 'video') {
-                setForm({...form, video: result.assets[0]})
-             }
+            const fileType = type === 'image' ? 'thumbnail' : 'video';
+            setForm({...form, [fileType]: result.assets[0]})
          }
-
-       
     }
 
     const handlePublish = async () => {
@@ -51,12 +44,12 @@ function Create() {
         setUploading(true);
         
         try {
-            await createPost({...form, userId: currentUser.currentUser.$id})
+            await createPost({...form, userId: currentUser.currentUser.$id});
+            setForm(intitialForm);
             router.push('/home');
         } catch (error) {
             Alert.alert('Error', error.message)
         }finally {
-
             setUploading(false);
         }
     }

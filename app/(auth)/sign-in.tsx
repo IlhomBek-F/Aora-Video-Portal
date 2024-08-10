@@ -9,13 +9,11 @@ import { View , Text, SafeAreaView, ScrollView, Image, Alert} from "react-native
 
 function SignIn() {
   const {user, setUser} = useUser() as any;
-
-    const [form, setForm] = useState({
+  const [submiting, setSubmiting] = useState(false)
+  const [form, setForm] = useState({
         email: '',
         password: ''
     });
-
-    const [submiting, setSubmiting] = useState(false)
 
     const handleSubmit = async () => {
       if(!form.email || !form.password) {

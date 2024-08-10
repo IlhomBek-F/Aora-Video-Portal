@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { SafeAreaView, ScrollView, Text, View, Image , Alert} from "react-native";
 
 function SignUp() {
+  const [submitting, setSubmitting] = useState(false);
   const {user, setUser} = useUser();
   const [form, setForm] = useState({
     name: '',
@@ -15,7 +16,6 @@ function SignUp() {
     password: ''
   });
 
-  const [submitting, setSubmitting] = useState(false)
 
   const handleSignUp = async () => {
     if(!form.email || !form.name || !form.password) {

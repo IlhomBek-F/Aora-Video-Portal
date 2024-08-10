@@ -7,20 +7,19 @@ import { View , Text, Image, TouchableOpacity, Alert} from "react-native";
 
 
 function VideoCard({item, handleDeletePost}: any) {
+  const [play, setPlay] = useState(false);
+  const {user: {currentUser}} = useUser();
   const [openMenu, setOpenMenu] = useState(false);
-    const {user: {currentUser}} = useUser()
-    const {title, thumbnail, video, users} = item;
-    const user = users
-    
-    const [play, setPlay] = useState(false);
+  const {title, thumbnail, video, users} = item;
+  const user = users;
    
-    const handleMenuPress = () => {
-       setOpenMenu(!openMenu)
-    }
+  const handleMenuPress = () => {
+      setOpenMenu(!openMenu)
+  }
 
-    const handleSavePress = () => {
-          addToFavorite(user.$id, item.$id)
-    }
+  const handleSavePress = () => {
+      addToFavorite(user.$id, item.$id)
+  }
 
     return (
        <View className="flex-col items-center px-4 mb-14">

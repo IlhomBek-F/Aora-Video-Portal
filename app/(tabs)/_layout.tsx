@@ -13,7 +13,6 @@ const TabIcon = ({icon, color, name, focused}: {icon: string, color: string, nam
 }
 
 function TabsLayout() {
-    
     return (
         <>
         <Tabs screenOptions={{tabBarShowLabel: false, tabBarActiveTintColor: '#ffa001', tabBarInactiveTintColor: '#CDCDE0',

@@ -50,7 +50,6 @@ export const signUp = async ({ name, email, password }: { name: string, email: s
 
 export const signIn = async ({ email, password }: { email: string, password: string }) => {
     try {
-        // await account.deleteSessions();
         const session = await account.createEmailPasswordSession(email, password);
         return session;
     } catch (error: any) {

@@ -5,7 +5,6 @@ import { Alert, Image, TextInput, TouchableOpacity, View } from "react-native";
 
 function SearchInput({initialValue, placeholder = 'Search for a video topic'}) {
    const pathName = usePathname();
-
    const [query, setQuery] = useState(initialValue ?? '');
 
     return (

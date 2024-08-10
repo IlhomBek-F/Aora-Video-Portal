@@ -10,15 +10,15 @@ import React, { useState } from "react";
 import { SafeAreaView, FlatList, View, TouchableOpacity , Image} from "react-native";
 
 function Profile() {
-  const {user: {currentUser}, setUser} = useUser();
+   const {user: {currentUser}, setUser} = useUser();
+   const [refreshing, setRefresh] = useState(false);
   const {data} = useAppwrite(() => getPostsByUserId(currentUser.$id));
-  const [refreshing, setRefresh] = useState(false);
   
   const handleLogout = () => {
-     logOut().then(() => {
+      logOut().then(() => {
       setUser({isLoggedIn: false, currentUser: {}, loading: false})
       router.replace('/sign-in')
-     })
+     }).catch(console.log)
   }
 
   return (
@@ -36,7 +36,6 @@ function Profile() {
                <View className="w-16 h-16 border border-secondary rounded-lg justify-center items-center">
                   <Image source={{uri: currentUser?.avatar}} className="w-[90%] h-[90%] rounded-lg" resizeMode="cover"/>
                </View>
-
 
                <View className="mt-5 flex-row">
 
