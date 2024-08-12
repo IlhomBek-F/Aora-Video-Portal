@@ -1,6 +1,6 @@
 import { icons } from "@/constants";
 import React, { useState } from "react"
-import { FlatList , ImageBackground, Text, TouchableOpacity, Image, View} from "react-native"
+import { FlatList , ImageBackground, TouchableOpacity, Image } from "react-native"
 import * as Animatable from 'react-native-animatable';
 import {Video, ResizeMode} from 'expo-av';
 

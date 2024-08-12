@@ -1,4 +1,4 @@
-import { Account, Avatars, Client, Databases, ID, ImageGravity, Models, Query, Storage, UploadProgress } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, ImageGravity, Query, Storage, UploadProgress } from 'react-native-appwrite';
 
 const { endpoint, platform, project, databaseId, userCollectionId, videoCollection, storageId, likedVideoCollection } = {
     endpoint: 'https://cloud.appwrite.io/v1',

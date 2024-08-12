@@ -1,16 +1,15 @@
 import { icons, images } from "@/constants";
-import { addToFavorite, deletePost } from "@/lib/appwrite";
+import { addToFavorite } from "@/lib/appwrite";
 import { useUser } from "@/lib/context/userContext";
 import { ResizeMode, Video } from "expo-av";
 import React, { useState } from "react";
-import { View , Text, Image, TouchableOpacity, Alert} from "react-native";
-
+import { View , Text, Image, TouchableOpacity } from "react-native";
 
 function VideoCard({item, handleDeletePost}: any) {
   const [play, setPlay] = useState(false);
   const {user: {currentUser}} = useUser();
   const [openMenu, setOpenMenu] = useState(false);
-  const {title, thumbnail, video, users} = item;
+  const {title, thumbnail, _, users} = item;
   const user = users;
    
   const handleMenuPress = () => {
